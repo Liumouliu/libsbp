@@ -11,7 +11,7 @@
 package: swiftnav.sbp.ssr
 description: Precise State Space Representation (SSR) corrections format
 stable: False
-public: True
+public: False
 include:
   - types.yaml
   - gnss.yaml

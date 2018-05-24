@@ -118,6 +118,56 @@ definitions:
         - sid:
             type: GnssSignal
             desc: GNSS signal identifier (16 bit)
+ 
+ - PackedOsrContent:
+    short_desc: OSR correction for a particular satellite signal.
+    desc: |
+      Pseudorange and carrier phase corrections for a satellite being
+      tracked.
+
+    fields:
+        - P:
+            type: u32
+            units: 2 cm
+            desc: Pseudorange observation
+        - L:
+            type: CarrierPhase
+            units: cycles
+            desc: Carrier phase observation with typical sign convention.
+        - lock:
+            type: u8
+            desc: |
+              Lock timer. This value gives an indication of the time
+              for which a signal has maintained continuous phase lock.
+              Whenever a signal has lost and regained lock, this
+              value is reset to zero. It is encoded according to DF402 from
+              the RTCM 10403.2 Amendment 2 specification.  Valid values range
+              from 0 to 15 and the most significant nibble is reserved for future use.
+        - fix_flag:
+            type: u8
+            desc: |
+              Fix type status flags.
+            fields:
+              - 0:
+                  desc: Integerness of carrier phase correction
+                  values:
+                      - 0: No integer ambiguity property
+                      - 1: Integer ambiguity
+        - sid:
+            type: GnssSignal
+            desc: GNSS signal identifier (16 bit)
+        - iono_var:
+            type: u8
+            units: 5 mm
+            desc: Ionospheric correction variance
+        - tropo_var:
+            type: u8
+            units: 5 mm
+            desc: Tropospheric correction variance
+        - range_var:
+            type: u8
+            units: 5 mm
+            desc: Orbit/clock/bias correction projected on range variance
 
  - MSG_OBS:
     id: 0x004A
@@ -1985,4 +2035,21 @@ definitions:
         - l2p_bias:
             type: s16
             units: m * 0.02
-            desc: GLONASS L2 P Code-Phase Bias            
+            desc: GLONASS L2 P Code-Phase Bias
+
+ - MSG_OSR:
+    id: 0x0640
+    short_desc: OSR corrections
+    desc: |
+      The OSR correction contains network corrections in an observation-like format
+    fields:
+        - header:
+            type: ObservationHeader
+            desc: Header of a GPS observation message
+        - obs:
+            type: array
+            fill: PackedOsrContent
+            map_by: sid
+            desc: |
+              OSR correction for a
+              satellite being tracked.

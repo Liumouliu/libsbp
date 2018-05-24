@@ -79,6 +79,30 @@ estimate for the signal is valid.
 } packed_obs_content_t;
 
 
+/** OSR correction for a particular satellite signal.
+ *
+ * Pseudorange and carrier phase corrections for a satellite being
+ * tracked.
+ */
+typedef struct __attribute__((packed)) {
+  u32 P;            /**< Pseudorange observation [2 cm] */
+  carrier_phase_t L;            /**< Carrier phase observation with typical sign convention. [cycles] */
+  u8 lock;         /**< Lock timer. This value gives an indication of the time
+for which a signal has maintained continuous phase lock.
+Whenever a signal has lost and regained lock, this
+value is reset to zero. It is encoded according to DF402 from
+the RTCM 10403.2 Amendment 2 specification.  Valid values range
+from 0 to 15 and the most significant nibble is reserved for future use.
+ */
+  u8 flags;        /**< Integerness status flags.
+ */
+  sbp_gnss_signal_t sid;          /**< GNSS signal identifier (16 bit) */
+  u16 iono_std;     /**< Slant ionospheric correction standard deviation [5 mm] */
+  u16 tropo_std;    /**< Slant tropospheric correction standard deviation [5 mm] */
+  u16 range_std;    /**< Orbit/clock/bias correction projected on range standard deviation [5 mm] */
+} packed_osr_content_t;
+
+
 /** GPS satellite observations
  *
  * The GPS observations message reports all the raw pseudorange and
@@ -926,6 +950,19 @@ typedef struct __attribute__((packed)) {
   s16 l2ca_bias;    /**< GLONASS L2 C/A Code-Phase Bias [m * 0.02] */
   s16 l2p_bias;     /**< GLONASS L2 P Code-Phase Bias [m * 0.02] */
 } msg_glo_biases_t;
+
+
+/** OSR corrections
+ *
+ * The OSR correction contains network corrections in an observation-like format
+ */
+#define SBP_MSG_OSR                  0x0640
+typedef struct __attribute__((packed)) {
+  observation_header_t header;    /**< Header of a GPS observation message */
+  packed_osr_content_t obs[0];    /**< OSR correction for a
+satellite being tracked.
+ */
+} msg_osr_t;
 
 
 /** \} */

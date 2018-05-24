@@ -143,31 +143,31 @@ definitions:
               value is reset to zero. It is encoded according to DF402 from
               the RTCM 10403.2 Amendment 2 specification.  Valid values range
               from 0 to 15 and the most significant nibble is reserved for future use.
-        - fix_flag:
+        - flags:
             type: u8
             desc: |
-              Fix type status flags.
+              Integerness status flags.
             fields:
               - 0:
-                  desc: Integerness of carrier phase correction
+                  desc: Integerness of carrier phase correction flag
                   values:
                       - 0: No integer ambiguity property
                       - 1: Integer ambiguity
         - sid:
             type: GnssSignal
             desc: GNSS signal identifier (16 bit)
-        - iono_var:
-            type: u8
+        - iono_std:
+            type: u16
             units: 5 mm
-            desc: Ionospheric correction variance
-        - tropo_var:
-            type: u8
+            desc: Slant ionospheric correction standard deviation
+        - tropo_std:
+            type: u16
             units: 5 mm
-            desc: Tropospheric correction variance
-        - range_var:
-            type: u8
+            desc: Slant tropospheric correction standard deviation
+        - range_std:
+            type: u16
             units: 5 mm
-            desc: Orbit/clock/bias correction projected on range variance
+            desc: Orbit/clock/bias correction projected on range standard deviation
 
  - MSG_OBS:
     id: 0x004A
